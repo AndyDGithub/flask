@@ -8,7 +8,7 @@ CORS(app, origins=["https://portfolio-mu-steel-62.vercel.app/"]) # Permettre les
 
 # Charger le modèle et le tokenizer
 # model_name = "./OpenHermes-2.5-Mistral-7B"
-model_name = "huggingface/mistral-7B"
+model_name = "https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.3"
 tokenizer = LlamaTokenizer.from_pretrained(model_name)
 
 # 🔹 CORRECTION : Définir un token de padding
