@@ -4,3 +4,4 @@ torch
 blobfile
 tiktoken
 flask-cors
+gunicorn
