@@ -4,7 +4,7 @@ import torch
 from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app)  # Permettre les requêtes cross-origin
+CORS(app, origins=["https://portfolio-mu-steel-62.vercel.app/"])  # Remplace par ton domaine
 
 # Charger le modèle et le tokenizer
 model_name = "./OpenHermes-2.5-Mistral-7B"
