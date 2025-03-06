@@ -3,6 +3,14 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 import torch
 from flask_cors import CORS
 
+
+# Utilisez la clé API Hugging Face stockée dans la variable d'environnement
+hf_token = os.getenv("ACCESS_TOKEN")
+if hf_token:
+    login(token=hf_token)
+else:
+    raise ValueError("Token Hugging Face non trouvé. Assurez-vous que la variable d'environnement HF_AUTH_TOKEN est définie.")
+
 app = Flask(__name__)
 CORS(app, origins=["https://portfolio-mu-steel-62.vercel.app/"]) # Permettre les requêtes cross-origin
 
