@@ -5,6 +5,8 @@ from flask_cors import CORS
 import os
 from huggingface_hub import login
 
+port = int(os.environ.get("PORT", 8080))  # Par défaut, 8080 si PORT n'est pas défini
+
 # Utilisez la clé API Hugging Face stockée dans la variable d'environnement
 hf_token = os.getenv("ACCESS_TOKEN")
 if hf_token:
@@ -60,4 +62,4 @@ def chat():
         return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
-    app.run(debug=False)
+    app.run(host="0.0.0.0", port=port)
