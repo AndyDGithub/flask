@@ -6,3 +6,5 @@ tiktoken
 flask-cors
 gunicorn
 sentencepiece
+mistral_inference
+huggingface_hub

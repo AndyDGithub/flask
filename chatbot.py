@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-from transformers import LlamaTokenizer, AutoModelForCausalLM
+from transformers import AutoModelForCausalLM, AutoTokenizer
 import torch
 from flask_cors import CORS
 
@@ -7,9 +7,9 @@ app = Flask(__name__)
 CORS(app, origins=["https://portfolio-mu-steel-62.vercel.app/"]) # Permettre les requêtes cross-origin
 
 # Charger le modèle et le tokenizer
-# model_name = "./OpenHermes-2.5-Mistral-7B"
-model_name = "https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.3"
-tokenizer = LlamaTokenizer.from_pretrained(model_name)
+model_name = "mistralai/Mistral-7B-Instruct-v0.3"
+tokenizer = AutoTokenizer.from_pretrained(model_name)
+model = AutoModelForCausalLM.from_pretrained(model_name)
 
 # 🔹 CORRECTION : Définir un token de padding
 tokenizer.pad_token = tokenizer.eos_token
@@ -51,4 +51,4 @@ def chat():
         return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=False)
