@@ -18,7 +18,7 @@ app = Flask(__name__)
 CORS(app, origins=["https://portfolio-mu-steel-62.vercel.app/"]) # Permettre les requêtes cross-origin
 
 # Charger le modèle et le tokenizer
-model_name = "mistralai/Mistral-7B-Instruct-v0.3"
+model_name = "mistralai/Mistral-7B-v0.1"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 model = AutoModelForCausalLM.from_pretrained(model_name)
 
