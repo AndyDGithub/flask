@@ -3,6 +3,7 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 import torch
 from flask_cors import CORS
 import os
+from huggingface_hub import login
 
 # Utilisez la clé API Hugging Face stockée dans la variable d'environnement
 hf_token = os.getenv("ACCESS_TOKEN")
