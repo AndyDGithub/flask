@@ -5,3 +5,4 @@ blobfile
 tiktoken
 flask-cors
 gunicorn
+sentencepiece
