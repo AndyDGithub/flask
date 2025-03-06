@@ -7,7 +7,8 @@ app = Flask(__name__)
 CORS(app, origins=["https://portfolio-mu-steel-62.vercel.app/"]) # Permettre les requêtes cross-origin
 
 # Charger le modèle et le tokenizer
-model_name = "./OpenHermes-2.5-Mistral-7B"
+# model_name = "./OpenHermes-2.5-Mistral-7B"
+model_name = "huggingface/mistral-7B"
 tokenizer = LlamaTokenizer.from_pretrained(model_name)
 
 # 🔹 CORRECTION : Définir un token de padding
