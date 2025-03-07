@@ -20,7 +20,7 @@ CORS(app, origins=["https://portfolio-mu-steel-62.vercel.app/"]) # Permettre les
 # Charger le modèle et le tokenizer
 model_name = "facebook/blenderbot-90M"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
-model = AutoModelForCausalLM.from_pretrained(model_name, torch_dtype=torch.float16, device_map="auto")
+model = AutoModelForCausalLM.from_pretrained(model_name, torch_dtype=torch.float32)
 # model = AutoModelForCausalLM.from_pretrained(model_name)
 
 # 🔹 CORRECTION : Définir un token de padding
@@ -29,7 +29,7 @@ tokenizer.pad_token = tokenizer.eos_token
 # device = "cuda" if torch.cuda.is_available() else "cpu"
 torch_dtype = torch.float16 if torch.cuda.is_available() else torch.float32
 
-device = "cpu"  # ⚠️ Force le CPU si pas de GPU
+device = "cpu"  # Force le CPU si pas de GPU
 model = AutoModelForCausalLM.from_pretrained(model_name, torch_dtype=torch.float32)
 model.to(device)  # 🔹 Déplacer entièrement le modèle sur CPU
 
