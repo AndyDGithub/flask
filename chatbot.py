@@ -15,7 +15,7 @@ else:
     raise ValueError("Token Hugging Face non trouvé. Assurez-vous que la variable d'environnement HF_AUTH_TOKEN est définie.")
 
 app = Flask(__name__)
-CORS(app, origins=["https://portfolio-mu-steel-62.vercel.app/"]) # Permettre les requêtes cross-origin
+CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
 
 # Charger le modèle et le tokenizer
 model_name = "facebook/blenderbot-90M"
