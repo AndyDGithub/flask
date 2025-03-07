@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-from transformers import AutoModelForCausalLM, AutoTokenizer
+from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 import torch
 from flask_cors import CORS
 import os
@@ -20,7 +20,13 @@ CORS(app, origins=["https://portfolio-mu-steel-62.vercel.app/"]) # Permettre les
 # Charger le modèle et le tokenizer
 model_name = "microsoft/DialoGPT-small"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
-model = AutoModelForCausalLM.from_pretrained(model_name)
+
+quantization_config = BitsAndBytesConfig(
+    load_in_8bit=True  # load_in_4bit=True pour plus de compression
+)
+
+model = AutoModelForCausalLM.from_pretrained(model_name, quantization_config=quantization_config)
+# model = AutoModelForCausalLM.from_pretrained(model_name)
 
 # 🔹 CORRECTION : Définir un token de padding
 tokenizer.pad_token = tokenizer.eos_token
