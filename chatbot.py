@@ -5,7 +5,7 @@ from flask_cors import CORS
 import os
 from huggingface_hub import login
 
-port = int(os.environ.get("PORT", 8080))  # Par défaut, 8080 si PORT n'est pas défini
+port = int(os.environ.get("PORT", 10000))  # Render définit automatiquement le port
 
 # Utilisez la clé API Hugging Face stockée dans la variable d'environnement
 hf_token = os.getenv("ACCESS_TOKEN")
@@ -25,7 +25,7 @@ quantization_config = BitsAndBytesConfig(
     load_in_4bit=True  # load_in_8bit=True pour moins de compression
 )
 
-model = AutoModelForCausalLM.from_pretrained(model_name, quantization_config=quantization_config)
+model = AutoModelForCausalLM.from_pretrained(model_name, quantization_config=quantization_config, torch_dtype=torch.float16, device_map="auto")
 # model = AutoModelForCausalLM.from_pretrained(model_name)
 
 # 🔹 CORRECTION : Définir un token de padding
