@@ -40,8 +40,11 @@ def chat():
     try:
         print("🔹 Requête reçue")  # Log pour voir si la requête arrive bien
 
-        data = request.json
-        print("🔹 Données reçues:", data)  # Log pour voir le contenu de la requête
+        if request.content_type != "application/json":
+            return jsonify({"error": "Content-Type doit être application/json"}), 415  # 🔥 Retourner une erreur plus claire
+
+        data = request.get_json()
+        print("🔹 Données reçues:", data)
 
         if not data or "message" not in data:
             return jsonify({"error": "Aucun message envoyé"}), 400
