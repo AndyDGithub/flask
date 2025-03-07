@@ -22,7 +22,7 @@ model_name = "microsoft/DialoGPT-small"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 
 quantization_config = BitsAndBytesConfig(
-    load_in_8bit=True  # load_in_4bit=True pour plus de compression
+    load_in_4bit=True  # load_in_8bit=True pour moins de compression
 )
 
 model = AutoModelForCausalLM.from_pretrained(model_name, quantization_config=quantization_config)
