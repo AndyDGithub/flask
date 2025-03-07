@@ -9,5 +9,4 @@ sentencepiece
 mistral_inference
 huggingface_hub
 protobuf
-bitsandbytes
 accelerate>=0.26.0
