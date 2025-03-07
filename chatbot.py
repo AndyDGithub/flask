@@ -33,19 +33,28 @@ device = "cpu"  # Force le CPU si pas de GPU
 model = AutoModelForCausalLM.from_pretrained(model_name, torch_dtype=torch.float32)
 model.to(device)  # 🔹 Déplacer entièrement le modèle sur CPU
 
+import traceback  # 🔹 Pour afficher les erreurs
 
 @app.route("/chat", methods=["POST"])
 def chat():
     try:
+        print("🔹 Requête reçue")  # Log pour voir si la requête arrive bien
+
         data = request.json
+        print("🔹 Données reçues:", data)  # Log pour voir le contenu de la requête
+
         if not data or "message" not in data:
             return jsonify({"error": "Aucun message envoyé"}), 400
 
         user_message = data["message"]
 
-        # 🔹 CORRECTION : Ajouter padding et truncation
-        inputs = tokenizer(user_message, return_tensors="pt", padding=True, truncation=True).to(device)
+        # 🔹 Vérifier si le modèle est bien chargé
+        if model is None:
+            print("❌ Modèle non chargé")
+            return jsonify({"error": "Modèle non chargé"}), 500
 
+        inputs = tokenizer(user_message, return_tensors="pt", padding=True, truncation=True).to(device)
+        
         with torch.no_grad():
             outputs = model.generate(
                 input_ids=inputs["input_ids"],
@@ -53,14 +62,19 @@ def chat():
                 max_new_tokens=150,
                 temperature=0.7,
                 do_sample=True,
-                pad_token_id=tokenizer.pad_token_id  # 🔹 CORRECTION : Utiliser le pad_token_id défini plus haut
+                pad_token_id=tokenizer.pad_token_id
             )
 
         bot_response = tokenizer.decode(outputs[0], skip_special_tokens=True).strip()
+        print("🔹 Réponse générée:", bot_response)  # Log pour voir la réponse générée
+
         return jsonify({"response": bot_response})
 
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        print("❌ Erreur :", str(e))  # 🔥 Afficher l'erreur dans les logs
+        traceback.print_exc()  # 🔥 Afficher la trace complète de l'erreur
+        return jsonify({"error": "Erreur interne"}), 500
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=port)
