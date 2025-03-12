@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, redirect, request, jsonify
 from transformers import AutoModelForCausalLM, AutoTokenizer
 import torch
 from flask_cors import CORS
@@ -8,17 +8,16 @@ from huggingface_hub import login
 port = int(os.environ.get("PORT", 10000))  # Render définit automatiquement le port
 
 # Utilisez la clé API Hugging Face stockée dans la variable d'environnement
-hf_token = os.getenv("ACCESS_TOKEN")
-if hf_token:
-    login(token=hf_token)
-else:
+hf_token = "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"#os.getenv("ACCESS_TOKEN")
+if not hf_token:
     raise ValueError("Token Hugging Face non trouvé. Assurez-vous que la variable d'environnement HF_AUTH_TOKEN est définie.")
+login(token=hf_token)
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
 
 # Charger le modèle et le tokenizer
-model_name = "mistralai/Mistral-7B-Instruct-v0.1"
+model_name = "google/gemma-2b-it" #"mistralai/Mistral-7B-Instruct-v0.1""OpenAssistant/oasst-sft-4-pythia-2.8b"
 # model_name = "facebook/blenderbot-90M"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 # model = AutoModelForCausalLM.from_pretrained(model_name)
@@ -30,15 +29,22 @@ tokenizer.pad_token = tokenizer.eos_token
 # torch_dtype = torch.float16 if torch.cuda.is_available() else torch.float32
 
 device = "cpu"  # Force le CPU si pas de GPU
-model = AutoModelForCausalLM.from_pretrained(model_name, torch_dtype=torch.float32)
-model.to(device)  # Déplacer entièrement le modèle sur CPU
+model = AutoModelForCausalLM.from_pretrained(model_name, 
+    torch_dtype=torch.float32, 
+    device_map="auto",
+    low_cpu_mem_usage=True
+)
+#model.to(device)  # Déplacer entièrement le modèle sur CPU
+
+
+print("OK")
 
 import traceback  # Pour afficher les erreurs
 
 
 @app.route("/")
 def index():
-    return render_template("https://portfolio-mu-steel-62.vercel.app/")
+    return redirect("http://andy-montaru.fr/portfolio/")
 
 @app.route("/chat", methods=["POST"])
 def chat():
@@ -71,7 +77,7 @@ def chat():
             outputs = model.generate(
                 input_ids=inputs["input_ids"],
                 attention_mask=inputs["attention_mask"],
-                max_new_tokens=150,
+                max_new_tokens=20,
                 temperature=0.7,
                 do_sample=True,
                 pad_token_id=tokenizer.pad_token_id
